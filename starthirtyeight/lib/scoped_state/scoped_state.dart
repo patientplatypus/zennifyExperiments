@@ -14,3 +14,13 @@ class CounterModel extends Model {
     notifyListeners();
   }
 }
+
+
+class PhoneModel extends Model{
+  String _callNumber = "";
+  String get callNumber => _callNumber;
+  appendNumber(digitAdd) {
+    _callNumber = callNumber + digitAdd;
+    notifyListeners();
+  }
+}
