@@ -11,13 +11,9 @@ class AboutScreen extends StatefulWidget {
 class _AboutScreenState extends State<AboutScreen> {
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('About Us'),
-      ),
-      body: new Center(
+    return new Container(
+        decoration: new BoxDecoration(color: new Color.fromRGBO(0, 0, 0, 0.0)),
         child: new Text('You are in the about page!')
-      ),
     );
   }
 }

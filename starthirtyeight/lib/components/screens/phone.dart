@@ -1,104 +1,127 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-import 'package:starthirtyeight/components/parts/number.dart';  
 import 'package:starthirtyeight/scoped_state/scoped_state.dart';
+import 'package:starthirtyeight/components/parts/phonepad.dart';
+import 'package:starthirtyeight/components/parts/totalnum.dart'; 
+import 'package:starthirtyeight/HTTP/requests.dart';
 
-class PhoneScreen extends StatefulWidget {
+
+class PhoneScreen extends StatelessWidget {
+  final MainModel model;
+  const PhoneScreen({
+    Key key, 
+    @required this.model, 
+  }) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    return new _PhoneScreenState();
+  Widget build(BuildContext context){
+    return ScopedModel<MainModel>(
+      model: model,
+      child: new MyPhoneScreen(model: model)
+    );
   }
 }
 
-class _PhoneScreenState extends State<PhoneScreen> {
+class MyPhoneScreen extends StatefulWidget {
+  final MainModel model;
+  const MyPhoneScreen({
+    Key key, 
+    @required this.model, 
+  }) : super(key: key);
 
+  @override
+  State<StatefulWidget> createState() {
+    return new _MyPhoneScreenState();
+  }
+}
+
+class _MyPhoneScreenState extends State<MyPhoneScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    print('inside initstate in phone');
+    print(widget.model);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      // appBar: new AppBar(
-      //   title: new Text('About Us'),
-      // ),
-      body: new Center(
+    return new Container(
+        decoration: new BoxDecoration(color: new Color.fromRGBO(0, 0, 0, 0.0)),
         // child: new Text('You are on the Phone Screen')
         child: Column(
           children: <Widget>[
             new Container(
-              height: 200.0, 
+              height: 100.0, 
               // decoration: BoxDecoration(color: Colors.blue[500])
             ),
             new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 new Expanded(
-                  child: new NumberBubble(model: PhoneModel(), numberDigit: "1")
-                ), 
-                new Expanded(
-                  child: new NumberBubble(model: PhoneModel(), numberDigit: "2")
-                ), 
-                new Expanded(
-                  child: new NumberBubble(model: PhoneModel(), numberDigit: "3")
+                  child: new MyTotalnum(model: widget.model),
                 )
-              ]
+              ],
             ),
             new Container(
-              height: 5.0, 
+              height: 50.0, 
               // decoration: BoxDecoration(color: Colors.blue[500])
             ),
-            new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Expanded(
-                  child: new NumberBubble(model: PhoneModel(), numberDigit: "4")
-                ), 
-                new Expanded(
-                  child: new NumberBubble(model: PhoneModel(), numberDigit: "5")
-                ), 
-                new Expanded(
-                  child: new NumberBubble(model: PhoneModel(), numberDigit: "6")
-                )
-              ]
-            ),
-            new Container(
-              height: 5.0, 
-              // decoration: BoxDecoration(color: Colors.blue[500])
-            ),
-            new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Expanded(
-                  child: new NumberBubble(model: PhoneModel(), numberDigit: "7")
-                ), 
-                new Expanded(
-                  child: new NumberBubble(model: PhoneModel(), numberDigit: "8")
-                ), 
-                new Expanded(
-                  child: new NumberBubble(model: PhoneModel(), numberDigit: "9")
-                )
-              ]
-            ),
-            new Container(
-              height: 5.0, 
-              // decoration: BoxDecoration(color: Colors.blue[500])
-            ),
-            new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Expanded(
-                  child: new NumberBubble(model: PhoneModel(), numberDigit: "*")
-                ), 
-                new Expanded(
-                  child: new NumberBubble(model: PhoneModel(), numberDigit: "0")
-                ), 
-                new Expanded(
-                  child: new NumberBubble(model: PhoneModel(), numberDigit: "#")
-                )
-              ]
-            ),
+            new MyPhonePad(model: widget.model),
+            new Padding(
+              padding: EdgeInsets.all(8.0),
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Expanded(
+                    child: new MaterialButton(
+                      color: Colors.black87,
+                      height: 100.0,
+                      child: Text(
+                        'Upload to Ion Cannon',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.cyan,
+                        ),
+                        textAlign: TextAlign.center
+                      ),
+                      onPressed: (){
+                        print('ion cannon pressed');
+                        // var requests = new GETRequests();
+                        // requests.testRequest();
+                        var requests = new POSTRequests();
+                        requests.addUserNumber(widget.model.callNumber);
+                      }
+                    ),
+                  ),
+                  new Padding(padding: new EdgeInsets.all(10.0)),
+                  new Expanded(
+                    child: new MaterialButton(
+                      color: Colors.black87,
+                      height: 100.0,
+                      child: Text(
+                        'Initiate Satellite Uplink',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.cyan,
+                        ),
+                        textAlign: TextAlign.center
+                      ),
+                      onPressed: (){
+                        print('satellite uplink pressed');
+                        var launchString = 'tel://'+widget.model.callNumber;
+                        launch(launchString);
+                      }
+                    ),
+                  )
+                ],
+              )
+            )
           ]
         )
-      ),
     );
   }
 }

@@ -2,32 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:starthirtyeight/scoped_state/scoped_state.dart'; 
 
-class NumberBubble extends StatelessWidget{
-  final PhoneModel model;
-  final String numberDigit;
-
-  const NumberBubble({
-    Key key, 
-    @required this.model, 
-    this.numberDigit
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ScopedModel<PhoneModel>(
-      model: model,
-      child: new MyNumberBubble(numberDigit: numberDigit)
-    );
-  }
-}
 
 class MyNumberBubble extends StatefulWidget {
 
   final String numberDigit;
+  final MainModel model;
 
   const MyNumberBubble({
     Key key, 
-    this.numberDigit
+    this.numberDigit,
+    @required this.model 
   }) : super(key: key);
 
   @override
@@ -45,10 +29,13 @@ class _MyNumberBubble extends State<MyNumberBubble> {
   }
 }
 
-var buildFlatButton = (widget) => ScopedModelDescendant<PhoneModel>(
+var buildFlatButton = (widget) => ScopedModelDescendant<MainModel>(
   builder: (context, child, model){
     return FlatButton(
-      onPressed: model.appendNumber(widget.numberDigit),
+      onPressed: (){
+        print('inside onPressed of buildFlatButton in number.dart');
+        model.appendNumber(widget.numberDigit);
+      },
       child: Text(
         widget.numberDigit,
         style: TextStyle(
