@@ -65,11 +65,32 @@ class SplashModel extends Model{
     _enterNumberButton = !_enterNumberButton;
     notifyListeners();
   }
+}
 
+class SettingsRouter extends Model{
+  String _settingsCurrentRoute = "menu";
+  String get settingsCurrentRoute => _settingsCurrentRoute;
+
+  recordSettingsRoute(routeName){
+    print('inside recordSettingsRoute');
+    _settingsCurrentRoute = routeName;
+    print('value of _settingsCurrentRoute');
+    print(_settingsCurrentRoute);
+    notifyListeners();
+  }
 }
 
 class SettingsModel extends Model{
   
+}
+
+class SettingsViews extends Model{
+  String _step1ChooseType="new_list";
+  String get step1ChooseType => _step1ChooseType;
+  changeStep1ChooseType(newType){
+    _step1ChooseType = newType;
+    notifyListeners();
+  }
 }
 
 class BottombarModel extends Model{
@@ -101,4 +122,4 @@ class PhoneModel extends Model{
   }
 }
 
-class MainModel extends Model with PhoneModel, SplashModel, ReadWriteModel, ErrorModel{}
+class MainModel extends Model with PhoneModel, SplashModel, ReadWriteModel, ErrorModel, SettingsRouter, SettingsViews{}

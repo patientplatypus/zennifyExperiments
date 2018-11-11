@@ -4,7 +4,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:starthirtyeight/scoped_state/scoped_state.dart';
 
 class SettingsScreen extends StatelessWidget{
-  final SettingsModel model;
+  final MainModel model;
   const SettingsScreen({
     Key key, 
     @required this.model, 
@@ -12,7 +12,7 @@ class SettingsScreen extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
-    return ScopedModel<SettingsModel>(
+    return ScopedModel<MainModel>(
       model: model,
       child: new MySettingsScreen(model: model)
     );
@@ -37,8 +37,8 @@ class _MySettingsScreen extends State<MySettingsScreen> {
   Widget build(BuildContext context) {
     double height100 = MediaQuery.of(context).size.height;
     double width100 = MediaQuery.of(context).size.width;
-    return new Material(
-      child: Container(
+    return new Material( 
+      child: new Container(
         decoration: new BoxDecoration(
           image: new DecorationImage(
             image: new AssetImage("assets/images/space2.jpg"),
@@ -51,118 +51,145 @@ class _MySettingsScreen extends State<MySettingsScreen> {
             Padding(
               padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
             ),
-            Card(
-              color: Colors.white,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text("Step 1.", 
-                      style: TextStyle(
-                        fontSize: 30.0,
-                        color: Colors.red,
-                      )
-                    )
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text("Create Or Select Phone List", 
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.cyan,
-                      )
-                    )
-                  )
-                ],
-              )
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
-            ),
-            Card(
-              color: Colors.white,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text("Step 2.", 
-                      style: TextStyle(
-                        fontSize: 30.0,
-                        color: Colors.red,
-                      )
-                    )
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text("Add Numbers To List", 
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.cyan,
-                      )
-                    )
-                  )
-                ],
-              )
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
-            ),
-            Card(
-              color: Colors.white,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text("Step 3.", 
-                      style: TextStyle(
-                        fontSize: 30.0,
-                        color: Colors.red,
-                      )
-                    )
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text("Choose Message and Times", 
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.cyan,
-                      )
-                    )
-                  )
-                ],
-              )
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
-            ),
-            Card(
-              color: Colors.white,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text("Step 4.", 
-                      style: TextStyle(
-                        fontSize: 30.0,
-                        color: Colors.red,
-                      )
-                    )
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text("Fire Ma' Lazers!", 
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.cyan,
-                      )
-                    )
-                  )
-                ],
-              )
-            ),
+            cardButton(widget, "Step 1.", "Create or Select Phone List", "step1"),
+            cardButton(widget, "Step 2.", "Add Numbers to List", "step2"),
+            cardButton(widget, "Step 3.", "Choose Message and Times", "step3"),
+            cardButton(widget, "Step 4.", "Fire the Lazerbeam", "Step 4."),
+            routerView(widget)
           ],
         ),
       )
     );
   }
 }
+
+class RouterView extends State<MySettingsScreen>{
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+
+    );
+  }
+}
+
+var step1View = (widget) => ScopedModelDescendant<MainModel>(
+  builder: (context, child, model){
+    double height100 = MediaQuery.of(context).size.height;
+    double width100 = MediaQuery.of(context).size.width;
+    return new Column(
+        children: <Widget>[
+          new Row(
+            children: <Widget>[
+              new Container(
+                width: 0.48*width100,
+                height: 0.08*height100,
+                padding: EdgeInsets.fromLTRB(0.01*width100, 0.0, 0.01*width100, 0.0),
+                child: new GestureDetector(
+                  onTap: (){
+                    widget.model.changeStep1ChooseType("new_list");
+                  },
+                  child: Card(
+                    color: widget.model.step1ChooseType=='new_list'?Colors.black:Colors.white,
+                    child: new Padding(
+                      padding: EdgeInsets.fromLTRB(0.0, 0.02*height100, 0.0, 0.02*height100),
+                      child:Text("Create New List",
+                        textAlign: TextAlign.center,
+                        style:TextStyle(
+                          fontSize: 15.0,
+                          color: widget.model.step1ChooseType=='new_list'?Colors.white:Colors.black,
+                        )
+                      )
+                    )
+                  )
+                )
+              ),
+              new Container(
+                width: 0.48*width100,
+                height: 0.08*height100,
+                padding: EdgeInsets.fromLTRB(0.01*width100, 0.0, 0.01*width100, 0.0),
+                child: new GestureDetector(
+                  onTap: (){
+                    widget.model.changeStep1ChooseType("view_lists");
+                  },
+                  child: Card(
+                    color: widget.model.step1ChooseType=='view_lists'?Colors.black:Colors.white,
+                    child: new Padding(
+                      padding: EdgeInsets.fromLTRB(0.0, 0.02*height100, 0.0, 0.02*height100),
+                      child:  Text("View Previous Lists", 
+                        textAlign: TextAlign.center,
+                        style:TextStyle(
+                          fontSize: 15.0,
+                          color: widget.model.step1ChooseType=='view_lists'?Colors.white:Colors.black,
+                        )
+                      )
+                    )
+                  )
+                )
+              ), 
+            ]
+          )
+        ]
+    );
+  }
+);
+
+
+var routerView = (widget) => ScopedModelDescendant<MainModel>(
+  builder: (context, child, model){
+    if(widget.model.settingsCurrentRoute=='step1'){
+      return step1View(widget);
+    }else if(widget.model.settingsCurrentRoute=='step2'){
+      return new Container();
+    }else if(widget.model.settingsCurrentRoute=='step3'){
+      return new Container();
+    }else if(widget.model.settingsCurrentRoute=='step4'){
+      return new Container();
+    }else{
+      return new Container();
+    }
+  }
+);
+
+var cardButton = (widget, cardTitle, cardMessage, routerName) => ScopedModelDescendant<MainModel>(
+  builder: (context, child, model){
+    if(widget.model.settingsCurrentRoute=='menu' || widget.model.settingsCurrentRoute==routerName){
+      return new Container(
+        padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
+        child: new GestureDetector(
+          onTap: (){
+            print('card tapped');
+            print(routerName);
+            widget.model.recordSettingsRoute(routerName);
+          },
+          child: Card(
+            color: widget.model.settingsCurrentRoute=='menu'?Colors.white:Colors.black,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(cardTitle, 
+                    style: TextStyle(
+                      fontSize: 30.0,
+                      color: Colors.red,
+                    )
+                  )
+                ),
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(cardMessage, 
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.cyan,
+                    )
+                  )
+                )
+              ],
+            )
+          )
+        )
+      );
+    }else{
+      return new Container();
+    }
+  }
+);

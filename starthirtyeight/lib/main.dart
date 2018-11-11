@@ -52,7 +52,7 @@ void main() {
     return new Stack(
       children: <Widget>[
         // new BackgroundImage(),
-        new SettingsScreen(model: SettingsModel()),
+        new SettingsScreen(model: MainModel()),
         new BottomBar(model: BottombarModel())
       ], 
     );
