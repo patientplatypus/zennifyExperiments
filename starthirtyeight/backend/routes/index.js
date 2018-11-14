@@ -8,6 +8,17 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.post('/addUserList', function(req,res,next){
+  console.log('/addUserList')
+  logos.addUserList(req.body.userNumber, req.body.listName, req.body.recordingType, res);
+  // res.json({message: "return from /addUserList"})
+})
+
+router.post('/getUserData', function(req, res, next){
+  console.log('inside /getUserData');
+  logos.lookUpUserNumber(req.body.userNumber, res);
+})
+
 router.post('/deleteIonCannonNumber', function(req,res,next){
   console.log('inside /deleteIonCannonNumber');
   logos.deleteIonCannonNumber(req.body.ionCannonNumber, req.body.userNumber, res);

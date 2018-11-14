@@ -13,3 +13,9 @@ var ionCannonNumberArray = [];
 uploadNumberToCannon(newNumber){
   print('inside uploadNumberToCannon');
 }
+
+var userData;
+
+updateUserData(newVal){
+  userData = newVal;
+}

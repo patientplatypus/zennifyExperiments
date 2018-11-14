@@ -30,6 +30,8 @@ void main() {
   var spin = new GETRequests();
   spin.spinRequest();
 
+  var mainModel = new MainModel();
+
   //get Device Info
   //not currently operational -- see file
   // var dInfo = new DeviceInfo();
@@ -49,10 +51,11 @@ void main() {
 
   globals.router.define('settings', handler: new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
     // return new SettingsScreen();
+
     return new Stack(
       children: <Widget>[
         // new BackgroundImage(),
-        new SettingsScreen(model: MainModel()),
+        new SettingsScreen(model: mainModel),
         new BottomBar(model: BottombarModel())
       ], 
     );
@@ -64,7 +67,7 @@ void main() {
     return new Stack(
       children: <Widget>[
         // new BackgroundImage(),//set inside SplashScreen - not working here for some reason
-        new SplashScreen(model: MainModel()),
+        new SplashScreen(model: mainModel),
         new BottomBar(model: BottombarModel())
       ], 
     );
@@ -76,7 +79,7 @@ void main() {
     return new Stack(
       children: <Widget>[
         new BackgroundImage(),
-        new PhoneScreen(model: MainModel()),
+        new PhoneScreen(model: mainModel),
         new BottomBar(model: BottombarModel())
       ], 
     );
@@ -88,7 +91,7 @@ void main() {
       home: new Stack(
         children: <Widget>[
           new BackgroundImage(),
-          new SplashScreen(model: MainModel()),
+          new SplashScreen(model: mainModel),
           new BottomBar(model: BottombarModel())
         ], 
       ),

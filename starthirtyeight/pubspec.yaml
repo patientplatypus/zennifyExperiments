@@ -56,6 +56,8 @@ flutter:
     - assets/images/smileyTest.jpg
     - assets/images/space2.jpg
     - assets/images/sixtyeightlogo.png
+    - assets/images/catOption.png
+    - assets/images/govOption.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -7,11 +7,13 @@ import 'package:starthirtyeight/scoped_state/scoped_state.dart';
 class ModalPart extends StatelessWidget {
 
   String modalString;
+  String modalType;
   final MainModel model;
 
   ModalPart({
     Key key, 
     this.modalString,
+    this.modalType,
     @required this.model, 
   }) : super(key: key);
 
@@ -19,7 +21,7 @@ class ModalPart extends StatelessWidget {
   Widget build(BuildContext context){
     return ScopedModel<MainModel>(
       model: model,
-      child: new MyModalPart(model: model, modalString: modalString)
+      child: new MyModalPart(model: model, modalString: modalString, modalType: modalType)
     );
   }
 }
@@ -28,10 +30,12 @@ class MyModalPart extends StatefulWidget {
   
   final MainModel model;
   String modalString;
+  String modalType;
 
   MyModalPart({
     Key key, 
     this.modalString,
+    this.modalType,
     @required this.model, 
   }) : super(key: key);
 
@@ -69,7 +73,7 @@ var widgetContainer = (widget) => ScopedModelDescendant<MainModel>(
                   padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
                 ),
                 Text(
-                  "!ACHTUNG~!\n Phone Numbers are 10 digits long broheim", 
+                  widget.modalString, 
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 20.0,
@@ -83,7 +87,16 @@ var widgetContainer = (widget) => ScopedModelDescendant<MainModel>(
                   color: Colors.red,
                   child: Text("Got it!"),
                   onPressed: (){
-                    widget.model.toggleErrorModal();
+                    print('inside Got it press in modal.dart');
+                    print('value of widget.modalType');
+                    print(widget.modalType);
+                    if(widget.modalType=='error'){
+                      print('modalType is error in modal.dart');
+                      widget.model.toggleErrorModal();
+                    }else if(widget.modalType=='info'){
+                      print('modalType is info in modal.dart');
+                      widget.model.setInfoModel(false, "");
+                    }
                   },
                 ),
                 Padding(

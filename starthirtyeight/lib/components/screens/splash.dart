@@ -103,7 +103,7 @@ var phoneContainer = (widget) => ScopedModelDescendant<MainModel>(
               phoneNumberSwitch(widget), 
             ],
           ), 
-          new ModalPart(modalString: '!ACHTUNG~! \n Phone numbers need to be 10 digits long broheim', model: widget.model)
+          new ModalPart(modalString: '!ACHTUNG~! \n Phone numbers need to be 10 digits long broheim', model: widget.model, modalType: 'error')
         ]
       );
     }else{

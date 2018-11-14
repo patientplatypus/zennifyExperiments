@@ -2,6 +2,7 @@
 import 'package:scoped_model/scoped_model.dart';
 import 'package:fluro/fluro.dart';
 import 'package:starthirtyeight/services/readwritephonenumber.dart';
+import 'package:starthirtyeight/HTTP/requests.dart' as Requests;
 
 var localStorage = new LocalPhoneStorage();
 
@@ -29,6 +30,8 @@ class ReadWriteModel extends Model{
     asyncWrite()async{
       await localStorage.writeUserPhoneNumber(writeVal);
       readFunc();
+      var requests = new Requests.POSTRequests();
+      requests.addUserNumber(writeVal);
     }
     asyncWrite();
   }
@@ -54,6 +57,18 @@ class ErrorModel extends Model{
   bool get errorNumberModal => _errorNumberModal;
   toggleErrorModal(){
     _errorNumberModal = !_errorNumberModal;
+    notifyListeners();
+  }
+}
+
+class InfoModel extends Model{
+  var _showInfoModel = false;
+  bool get showInfoModel => _showInfoModel;
+  var _infoName = "";
+  String get infoName => _infoName;
+  setInfoModel(newVal, newName){
+    _showInfoModel = newVal;
+    _infoName = newName;
     notifyListeners();
   }
 }
@@ -84,6 +99,17 @@ class SettingsModel extends Model{
   
 }
 
+class SettingsData extends Model{
+  var _userMongoose;
+  get userMongoose => _userMongoose;
+  setUserMongoose(newVal){
+    print('inside setUserMongoose and newVal');
+    print(newVal);
+    _userMongoose = newVal;
+    notifyListeners();
+  }
+}
+
 class SettingsViews extends Model{
   String _step1ChooseType="new_list";
   String get step1ChooseType => _step1ChooseType;
@@ -91,6 +117,49 @@ class SettingsViews extends Model{
     _step1ChooseType = newType;
     notifyListeners();
   }
+
+  bool _showProductBanners=true;
+  bool get showProductBanners => _showProductBanners;
+  setShowProductBanners(newVal){
+    _showProductBanners = newVal;
+    notifyListeners();
+  }
+
+  bool _showPrevLists=false;
+  bool get showPrevLists => _showPrevLists;
+  setShowPrevLists(newVal){
+    _showPrevLists = newVal;
+    notifyListeners();
+  }
+
+  bool _showNameList=false;
+  bool get showNameList => _showNameList;
+  setShowNameList(newVal){
+    _showNameList = newVal;
+    notifyListeners();
+  }
+
+  String _recordingOption = "none";
+  String get recordingOption => _recordingOption;
+  setRecordingOption(newVal){
+    _recordingOption = newVal;
+    notifyListeners();
+  }
+
+  String _newListName = "";
+  String get newListName => _newListName;
+  setNewListName(newVal){
+    _newListName = newVal;
+    notifyListeners();
+  }
+
+  String _nextStep = "";
+  String get nextStep => _nextStep;
+  setNextStep(newVal){
+    _nextStep = newVal;
+    notifyListeners();
+  }
+
 }
 
 class BottombarModel extends Model{
@@ -122,4 +191,4 @@ class PhoneModel extends Model{
   }
 }
 
-class MainModel extends Model with PhoneModel, SplashModel, ReadWriteModel, ErrorModel, SettingsRouter, SettingsViews{}
+class MainModel extends Model with PhoneModel, SplashModel, ReadWriteModel, ErrorModel, SettingsRouter, SettingsViews, InfoModel, SettingsData{}
