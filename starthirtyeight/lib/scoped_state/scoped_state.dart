@@ -108,6 +108,16 @@ class SettingsData extends Model{
     _userMongoose = newVal;
     notifyListeners();
   }
+
+  var _selectedListID;
+  get selectedListID => _selectedListID;
+  setSelectedListID(newVal){
+    print('inside setSelectedListID');
+    _selectedListID = newVal;
+    print('value of _selectedListID');
+    print(_selectedListID);
+    notifyListeners();
+  }
 }
 
 class SettingsViews extends Model{
@@ -115,6 +125,13 @@ class SettingsViews extends Model{
   String get step1ChooseType => _step1ChooseType;
   changeStep1ChooseType(newType){
     _step1ChooseType = newType;
+    notifyListeners();
+  }
+
+  String _step2ChooseType="add#";
+  String get step2ChooseType => _step2ChooseType;
+  changeStep2ChooseType(newType){
+    _step2ChooseType = newType;
     notifyListeners();
   }
 
@@ -157,6 +174,13 @@ class SettingsViews extends Model{
   String get nextStep => _nextStep;
   setNextStep(newVal){
     _nextStep = newVal;
+    notifyListeners();
+  }
+
+  String _deleteNotify = "";
+  String get deleteNotify => _deleteNotify;
+  setDeleteNotify(newVal){
+    _deleteNotify = newVal;
     notifyListeners();
   }
 

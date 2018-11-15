@@ -10,7 +10,8 @@ var NumberSchema = new Schema({
             listName: String,
             recordingType: String,
             timesPerDay: Number,
-            numberDays: Number,
+            startDate: Date,
+            endDate: Date,
             listNumbers: Array
         }
     ]

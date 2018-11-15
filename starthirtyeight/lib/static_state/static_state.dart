@@ -14,8 +14,8 @@ uploadNumberToCannon(newNumber){
   print('inside uploadNumberToCannon');
 }
 
-var userData;
+// var userData;
 
-updateUserData(newVal){
-  userData = newVal;
-}
+// updateUserData(newVal){
+//   userData = newVal;
+// }

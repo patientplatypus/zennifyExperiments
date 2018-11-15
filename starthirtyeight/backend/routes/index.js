@@ -16,7 +16,7 @@ router.post('/addUserList', function(req,res,next){
 
 router.post('/getUserData', function(req, res, next){
   console.log('inside /getUserData');
-  logos.lookUpUserNumber(req.body.userNumber, res);
+  logos.getUserData(req.body.userNumber, res);
 })
 
 router.post('/deleteIonCannonNumber', function(req,res,next){
@@ -29,16 +29,32 @@ router.post('/addIonCannonNumber', function(req,res,next){
   logos.addNewIonCannonNumber(req.body.ionCannonNumber, req.body.userNumber, res);
 })
 
+router.post('/addUserTargetNumber', function(req,res,next){
+  console.log('inside /addUserTargetNumber');
+  logos.addUserTargetNumber(req.body.userNumber, req.body.listID, req.body.targetNumber, res);
+});
+
 router.post('/addUserNumber', function(req,res,next){
   console.log('inside /addUserNumber');
   console.log('value of req.body', req.body)
-  var returnNum = logos.lookUpUserNumber(req.body.userNumber);
-  if (returnNum==null){
-    console.log('no number found - adding Number')
-    logos.createNewUserNumber(req.body.userNumber, res);
-  }else{
-    res.json({message: returnNum})
+
+  function setUserNumber(returnNum){
+    console.log('inside setUserNumber')
+    console.log('value of returnNum: ', returnNum);
+    if(returnNum=='number not found'){
+      console.log('no number found - adding Number');
+      console.log('value of returnNum : ', returnNum);
+      logos.addUserNumber(req.body.userNumber, res);
+    }else{
+      res.json({message: 'user number already exists'})
+    }
   }
+     
+  asyncCall = async () => {
+    console.log('beginning of asyncCall')
+    setUserNumber(await logos.checkUserData(req.body.userNumber));
+  }
+  asyncCall();
 })
 
 router.post('/deleteUserNumber', function(req,res,next){

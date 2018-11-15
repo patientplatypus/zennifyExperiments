@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'dart:async';
 import 'dart:io';
 
-var zeitURL="https://backend-akpdptqjya.now.sh";
+var zeitURL="https://backend-utkhrdkgkk.now.sh";
 
 class GETRequests{
 
@@ -90,9 +90,27 @@ class POSTRequests{
       response=await dio.post(zeitURL + "/addUserList", data: {"userNumber": userNumber, "listName": listName, "recordingType": recordingType});
       print('here is the response from addUserList');
       print(response);
-      return response.data;
+      return response;
     } on DioError catch(e) {
         print('there was some error in addUserList');
+        print(e.response.data);
+        print(e.response.headers);
+        print(e.response.request);  
+        return e.response;
+    }
+  }
+
+  addUserTargetNumber(userNumber, listID, targetNumber) async{
+    print('inside addUserTargetNumber()');
+    Dio dio = new Dio();
+    try {
+      Response response;
+      response=await dio.post(zeitURL + "/addUserTargetNumber", data: {"userNumber": userNumber, "listID": listID, "targetNumber": targetNumber});
+      print('here is the response from addUserTargetNumber');
+      print(response);
+      return response;
+    } on DioError catch(e) {
+        print('there was some error in addUserTargetNumber');
         print(e.response.data);
         print(e.response.headers);
         print(e.response.request);  

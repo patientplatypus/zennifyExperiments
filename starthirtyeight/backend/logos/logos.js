@@ -1,18 +1,89 @@
 
 var NumberSchema = require('../models/numberSchema');
 
-const lookUpUserNumber = (userNumber, res) => {
+const getUserData = (userNumber, res) => {
     console.log('inside lookUpUserNumber');
-    var returnNum = null;
     NumberSchema.findOne({'userPhoneNumber': userNumber}, (err, userNumberFound)=>{
       if (err) return console.log('there was an error: ', err);
       console.log('found userNumber: ', userNumberFound);
       res.json({message: 'user data found', schema: userNumberFound})
     })
   }
+
+function checkUserData(userNumber){
+    console.log('inside checkUserData');
+    return new Promise((resolve, _)=>{
+        NumberSchema.findOne({'userPhoneNumber': userNumber}, (err, userNumberFound)=>{
+            if (err){
+                console.log('value of error in checkUserData', err);
+                resolve("error");
+            }else{
+                console.log('value of userNumberFound: ', userNumberFound);
+                if(typeof userNumberFound!='undefined' && userNumberFound!=null){
+                    console.log('inside if 2 in checkUserData')
+                    resolve("number found");
+                }else{
+                    console.log('inside if 3 in checkUserData')
+                    resolve("number not found");
+                }
+            }
+        })
+    })
+}
+
+const addUserTargetNumber = (userNumber, listID, targetNumber, res) =>{
+    console.log('value of listID: ', listID);
+    console.log('value of userNumber: ', userNumber);
+    console.log('value of targetNumber: ', targetNumber)
+
+    const getCurrentTargets = () => {
+        return new Promise(resolve=>{
+            NumberSchema.findOne({'targetPhoneNumbers': {$elemMatch: {'_id': listID}}}, (err, userNumberFound)=>{
+                userNumberFound.targetPhoneNumbers.forEach(target=>{
+                    if (target._id==listID){
+                        resolve(target.listNumbers)
+                    }
+                })
+            })
+        })
+    }
+
+    const findAndUpdate = (currentNumbers) => {
+        NumberSchema.findOneAndUpdate(
+            {'targetPhoneNumbers': {$elemMatch: {'_id': listID}}},
+            {$push: {"targetPhoneNumbers.$.listNumbers": targetNumber}},
+            (err, userFoundNumber)=>{
+            if (err){
+                console.log("there was an error in addUserTargetNumber: ", err);
+                res.json({message: 'failed to added target number'})
+            }else{
+                if (currentNumbers.indexOf(targetNumber)==-1){
+                    console.log("currentNumbers.indexOf(userNumber)")
+                    console.log(currentNumbers.indexOf(targetNumber));
+                    console.log('value of userFoundNumber: ', userFoundNumber)
+                    NumberSchema.findOne({'userPhoneNumber': userNumber}, (err, userNumberFound) => {
+                        if (err){res.json({message: "there was an error"})}
+                        res.json({message: 'successfully added target number', schema: userNumberFound});
+                    })
+                }else{
+                    res.json({message: "didnt add; number already in list"})
+                }
+            }
+        })
+    }
+
+    asyncCall = async () => {
+        var currentNumbers = await getCurrentTargets();
+        console.log('value of currentNumbers: ', currentNumbers);
+        findAndUpdate(currentNumbers);
+    }
+
+    asyncCall();
+
+}
   
-const createNewUserNumber = (userNumber, res) => {
-    console.log('inside createNewUserNumber');
+const addUserNumber = (userNumber, res) => {
+    console.log('inside addUserNumber');
     var newNumber = new NumberSchema(
       {
           userPhoneNumber: userNumber,
@@ -35,7 +106,7 @@ const addUserList = (userNumber, listName, recordingType, res) => {
     const updateUserListFunc = () => {
         NumberSchema.findOneAndUpdate(
             { 'userPhoneNumber': userNumber }, 
-            { $push: { 'targetPhoneNumbers': {'listName': listName, 'listNumbers': [], 'recordingType': recordingType, 'numberDays': 0, 'timesPerDay': 0} } },
+            { $push: { 'targetPhoneNumbers': {'listName': listName, 'listNumbers': [], 'recordingType': recordingType, 'startDate': Date.now(), 'endDate': Date.now(),'timesPerDay': 0} } },
             {new: true, upsert: true},
             (error, success) => {
                 if (error) {
@@ -153,10 +224,12 @@ const deleteIonCannonNumber = (ionNumber, userNumber, res) => {
 }
 
 module.exports = {
-    lookUpUserNumber,
-    createNewUserNumber,
+    getUserData,
+    addUserNumber,
+    addUserList,
+    checkUserData,
+    addUserTargetNumber,
     deleteUserNumber,
     addNewIonCannonNumber,
     deleteIonCannonNumber, 
-    addUserList
 }
