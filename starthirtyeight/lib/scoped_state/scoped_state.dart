@@ -184,6 +184,13 @@ class SettingsViews extends Model{
     notifyListeners();
   }
 
+  String _deleteNumberString = "";
+  String get deleteNumberString => _deleteNumberString;
+  setDeleteNumberString(newVal){
+    _deleteNumberString = newVal;
+    notifyListeners();
+  }
+
 }
 
 class BottombarModel extends Model{

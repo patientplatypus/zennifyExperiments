@@ -13,6 +13,7 @@ import 'package:starthirtyeight/HTTP/requests.dart' as Requests;
 import 'package:starthirtyeight/static_state/static_state.dart' as StaticState;
 import 'package:starthirtyeight/services/readwritephonenumber.dart' as Phone;
 import 'dart:convert';
+import 'dart:async';
 
 var step2View = (widget) => ScopedModelDescendant<MainModel>(
   builder: (context, child, model){
@@ -51,13 +52,70 @@ var step2View = (widget) => ScopedModelDescendant<MainModel>(
   }
 );
 
+
+class CancelDelete extends StatelessWidget{
+  final MainModel model; 
+  CancelDelete({
+    Key key, 
+    @required this.model,
+  }): super(key: key);
+  @override
+  Widget build(BuildContext context){
+    return ScopedModel<MainModel>(
+      model: model,
+      child: new MyCancelDelete(model: model)
+    );
+  }
+}
+
+class MyCancelDelete extends StatefulWidget {
+  final Model model;
+
+  MyCancelDelete({
+    Key key, 
+    @required this.model, 
+  }): super(key: key);
+
+
+  @override
+  State<StatefulWidget> createState() {
+    return new _MyCancelDelete();
+  }
+}
+
+class _MyCancelDelete extends State<MyCancelDelete>{
+  @override
+    Widget build(BuildContext context) {
+      return cancelDelete(widget);
+    }
+}
+
+var cancelDelete = (widget) => ScopedModelDescendant<MainModel>(
+  builder: (context, child, model){
+    return RaisedButton(
+      color: Colors.white,
+      onPressed: (){
+        widget.model.setDeleteNumberString("");
+        widget.model.setDeleteNotify("");
+      },
+      child: Text("Cancel")
+    );
+  }
+);
+
 class DeleteCheck extends StatefulWidget{
   
+  final MainModel model;
   final offsetBool;
+  final double widthSlide;
+  bool showReturn = false;
 
   DeleteCheck({
     Key key, 
-    this.offsetBool
+    this.offsetBool, 
+    this.widthSlide, 
+    this.showReturn,
+    @required this.model,
   }): super(key: key);
 
   @override 
@@ -67,54 +125,158 @@ class DeleteCheck extends StatefulWidget{
 }
 
 class _MyDeleteCheck extends State<DeleteCheck> with TickerProviderStateMixin {
-  AnimationController _controllerFloat;
-  Animation<double> _offsetFloat; 
-
+  AnimationController _controller;
+  Animation<Offset> _offsetFloat;
+  Timer _timer; 
+  
   @override
   void initState() {
     super.initState();
 
-    _controllerFloat = new AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
 
-    _offsetFloat = new Tween(
-        begin: 10.0,
-        end: 0.0,
-      ).animate(_controllerFloat);
-
+    _offsetFloat = Tween<Offset>(begin: Offset(0.0, 0.0), end: Offset(20.0, 0.0))
+        .animate(_controller);
+    
     _offsetFloat.addListener((){
       setState((){});
     });
 
-    print('value of widget.offsetBool');
-    print(widget.offsetBool);
+    _controller.forward();
 
-    if(widget.offsetBool == "true"){
-      _controllerFloat.forward();
-    }else if(widget.offsetBool== "false"){
-      _controllerFloat.reverse();
-    }
   }
-  
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-
+    double height100 = MediaQuery.of(context).size.height;
+    double width100 = MediaQuery.of(context).size.width;
+    _timer = new Timer(const Duration(milliseconds: 50), () {
+      widget.showReturn = true;
+    });
     return new Container(
-      alignment: FractionalOffset(_offsetFloat.value, 0.0),
-      decoration: BoxDecoration(color: Colors.cyan),
-      child: Text("hello there sailor")
-      // child: Row(
-      //   children: <Widget>[
-      //     Expanded(
-      //       child: RaisedButton(
-      //         onPressed: (){
-
-      //         },
-      //         child: Text("ok")
-      //       )
-      //     )
-      //   ],
-      // ),
+      padding: EdgeInsets.fromLTRB(0.05*width100, 0.0, 0.0, 0.0),
+      height: 0.15*height100, 
+      child: Container(
+        color: Colors.cyan,
+        width: 0.5*width100,
+        child: Column(
+          children: <Widget>[
+            Padding(padding: EdgeInsets.all(5.0)),
+            Text(
+              'are you sure?', 
+              textAlign: TextAlign.center,
+            ),
+            Padding(padding: EdgeInsets.all(5.0)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                RaisedButton(
+                  color: Colors.red,
+                  onPressed: (){},
+                  child: Text("Delete")
+                ),
+                CancelDelete(model: widget.model)
+              ]
+            )
+          ],
+        )
+      )
     );
+    // return widget.showReturn==true ? new Container( //why does this not work?????
+    //   // alignment: Alignment.center,
+    //   child: SlideTransition(
+    //     position: _offsetFloat,
+    //     child: Container(
+    //       color: Colors.cyan,
+    //       width: 0.3*width100,
+    //       child: Text("hello there sailor")
+    //     )
+    //   )
+    // ) : new Container();
+    // return widget.showReturn==true?new SlideTransition(
+    //   position: _offsetFloat,
+    //   child: Container(
+    //     color: Colors.cyan,
+    //     width: 0.525*width100-3.0,
+    //     child: Text("hello there sailor")
+    //   )
+    // ):new Container();
+
+    // return new Container(
+    //   // color: Colors.purple,
+    //   height: 0.15*height100,
+    //   padding: EdgeInsets.fromLTRB(0.05*width100, 0.0, 0.0, 0.0),
+    //   child: SlideTransition(
+    //     position: _offsetFloat,
+    //     child: Container(
+    //       color: Colors.cyan,
+    //       width: 0.525*width100-3.0,
+    //       child: Text("hello there sailor")
+    //     )
+    //   )
+    // );
+
+    // return new Container(
+    //   height: 0.15*height100,
+    //   width: 0.50*width100,
+    //   // padding: EdgeInsets.fromLTRB((0.05*width100+1.0), 0.0, 0.0, 0.0),//overflows on exact because of card margin
+    //   alignment: FractionalOffset(_offsetFloat.value, 0.0),
+    //   // decoration: BoxDecoration(color: Colors.cyan),
+    //   decoration: BoxDecoration(color: Color.fromRGBO(0, 0, 0, 0.0)),
+    //   // child: Text("hello there sailor")
+    //   child: Container(
+    //     height: 0.15*height100,
+    //     // width: 0.50*width100,
+    //     padding: EdgeInsets.fromLTRB(30.0, 20.0, 30.0, 20.0),
+    //     // decoration: BoxDecoration(color: Color.fromRGBO(0, 0, 0, 0.0)),
+    //     decoration: BoxDecoration(color: Colors.cyan),
+    //     child: Column(
+    //       // crossAxisAlignment: CrossAxisAlignment.stretch,
+    //       children: <Widget>[
+    //         Text('are you sure?'), 
+    //         Expanded(
+    //           child: Row(
+    //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    //             children: <Widget>[
+    //               RaisedButton(
+    //                 padding: EdgeInsets.all(1.0),
+    //                 color: Colors.red,
+    //                 onPressed: (){
+                      
+    //                 },
+    //                 child: Text(
+    //                   "Delete",
+    //                   style: TextStyle(fontSize: 5.0)
+    //                 )
+    //               ),
+    //               Padding(padding: EdgeInsets.all(5.0)),
+    //               RaisedButton(
+    //                 padding: EdgeInsets.all(1.0),
+    //                 color: Colors.cyan,
+    //                 onPressed: (){
+    //                   // reverseAnim();
+    //                 },
+    //                 child: Text(
+    //                   'Cancel',
+    //                   style: TextStyle(fontSize: 5.0)
+    //                 )
+    //               )
+    //             ]
+    //           )
+    //         )
+    //       ],
+    //     )      
+    //   )
+    // );
   }
 }
 
@@ -139,9 +301,11 @@ var step2ViewNumbersList = (widget) => ScopedModelDescendant<MainModel>(
                   child: Card(
                     color: Color.fromRGBO(250, 250, 250, 0.8),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Padding(padding: EdgeInsets.all(2.0)),
-                        Expanded(
+                        Container(
+                          width: 0.40*width100,
                           child: Text(
                             widget.model.userMongoose.data['schema']['targetPhoneNumbers'][i]['listNumbers'][x].toString(),
                             style: TextStyle(
@@ -149,20 +313,26 @@ var step2ViewNumbersList = (widget) => ScopedModelDescendant<MainModel>(
                             ),
                           )
                         ),
-                        Padding(padding: EdgeInsets.all(20.0)),
-                        Expanded(
-                          child: Stack(
-                            children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.all(30.0),
-                                decoration: BoxDecoration(color: Colors.red),
-                                height: 0.15*height100,
-                                child: GestureDetector(
-                                  onTap: (){
-                                    print('gesture Tapped');
-                                    widget.model.setDeleteNotify('true');
-                                  },
-                                  child:  Text(
+                        // Padding(padding: EdgeInsets.all(20.0)),
+                        Stack(
+                          children: <Widget>[
+                            Container(
+                              width: 0.55*width100,
+                              padding: EdgeInsets.fromLTRB(0.05*width100, 0.0, 0.0, 0.0),//overflows on exact because of card margin
+                              decoration: BoxDecoration(color: Color.fromRGBO(0, 0, 0, 0.0)),
+                              height: 0.15*height100,
+                              child: GestureDetector(
+                                onTap: (){
+                                  print('gesture Tapped');
+                                  widget.model.setDeleteNotify('true');
+                                  widget.model.setDeleteNumberString(widget.model.userMongoose.data['schema']['targetPhoneNumbers'][i]['listNumbers'][x].toString());
+                                },
+                                child: Container(
+                                  width: 0.50*width100,
+                                  height: 0.15*height100,
+                                  decoration: BoxDecoration(color: Colors.red),
+                                  padding: EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 30.0),
+                                  child: Text(
                                     "Delete",
                                     style: TextStyle(
                                       fontSize: 20.0
@@ -170,10 +340,18 @@ var step2ViewNumbersList = (widget) => ScopedModelDescendant<MainModel>(
                                     textAlign: TextAlign.center,
                                   )
                                 )
-                              ), 
-                              widget.model.deleteNotify!=""?DeleteCheck(offsetBool: widget.model.deleteNotify):Container()
-                            ],
-                          )
+                              )
+                            ), 
+                            widget.model.deleteNotify!=""&&    widget.model.deleteNumberString==widget.model.userMongoose.data['schema']['targetPhoneNumbers'][i]['listNumbers'][x].toString()?
+                            DeleteCheck(model: model, offsetBool: widget.model.deleteNotify, widthSlide: 0.50*width100):
+                            Container(width: 0.55*width100, height: 0.15*height100,padding: EdgeInsets.fromLTRB(0.05*width100, 0.0, 0.0, 0.0))
+                            // Container(
+                            //   padding: EdgeInsets.fromLTRB(0.05*width100+0.5, 0.0, 0.0, 0.0),
+                            //   child: widget.model.deleteNotify!=""&&    widget.model.deleteNumberString==widget.model.userMongoose.data['schema']['targetPhoneNumbers'][i]['listNumbers'][x].toString()?
+                            //     DeleteCheck(offsetBool: widget.model.deleteNotify, widthSlide: 0.5*width100):
+                            //     Container(width: 0.50*width100, height: 0.15*height100,)
+                            // ),
+                          ],
                         )
                       ],
                     )
