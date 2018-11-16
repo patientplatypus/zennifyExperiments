@@ -31,6 +31,22 @@ function checkUserData(userNumber){
     })
 }
 
+const deleteUserTargetNumber = (userNumber, listID, targetNumber, res) =>{ 
+    console.log('inside deleteUserTargetNumber()');
+
+    NumberSchema.findOneAndUpdate({ "userPhoneNumber": userNumber, "targetPhoneNumbers._id": listID },
+        { $pull: { "targetPhoneNumbers.$.listNumbers" : targetNumber } }, (err, userFoundNumber) => {
+            if (err) {
+                return res.status(404).json({ message: 'Error' });
+            }
+            NumberSchema.findOne({'userPhoneNumber': userNumber,  "targetPhoneNumbers._id": listID}, (err, userNumberFound) => {
+                if (err){res.json({message: "there was an error"})}
+                res.json({message: 'successfully deleted number', schema: userNumberFound});
+            })
+        }
+    );
+}
+
 const addUserTargetNumber = (userNumber, listID, targetNumber, res) =>{
     console.log('value of listID: ', listID);
     console.log('value of userNumber: ', userNumber);
@@ -229,6 +245,7 @@ module.exports = {
     addUserList,
     checkUserData,
     addUserTargetNumber,
+    deleteUserTargetNumber,
     deleteUserNumber,
     addNewIonCannonNumber,
     deleteIonCannonNumber, 

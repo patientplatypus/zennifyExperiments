@@ -92,13 +92,40 @@ class _MyCancelDelete extends State<MyCancelDelete>{
 
 var cancelDelete = (widget) => ScopedModelDescendant<MainModel>(
   builder: (context, child, model){
-    return RaisedButton(
-      color: Colors.white,
-      onPressed: (){
-        widget.model.setDeleteNumberString("");
-        widget.model.setDeleteNotify("");
-      },
-      child: Text("Cancel")
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        RaisedButton(
+          color: Colors.red,
+          onPressed: (){
+            // var listID = widget.model.
+            var userNumber = widget.model.userMongoose.data['schema']['userPhoneNumber'];
+            var listID = widget.model.selectedListID;
+            var targetNumber = widget.model.deleteNumberString;
+
+            waitForDeleteResponse() async{
+              var requests = Requests.POSTRequests();
+              var response = await requests.deleteUserTargetNumber(userNumber, listID, targetNumber);
+              print('back from delete requests and value of requests: ');
+              print(response);
+              if(response.data['message']=='successfully deleted number'){
+                print('message if successful!');
+                widget.model.setUserMongoose(response);
+              }
+            }
+            waitForDeleteResponse();
+          },
+          child: Text("Delete")
+        ),
+        RaisedButton(
+          color: Colors.white,
+          onPressed: (){
+            widget.model.setDeleteNumberString("");
+            widget.model.setDeleteNotify("");
+          },
+          child: Text("Cancel")
+        )
+      ]
     );
   }
 );
@@ -135,10 +162,10 @@ class _MyDeleteCheck extends State<DeleteCheck> with TickerProviderStateMixin {
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 1),
+      duration: const Duration(milliseconds: 500),
     );
 
-    _offsetFloat = Tween<Offset>(begin: Offset(0.0, 0.0), end: Offset(20.0, 0.0))
+    _offsetFloat = Tween<Offset>(begin: Offset(2.0, 0.0), end: Offset(0.0, 0.0))
         .animate(_controller);
     
     _offsetFloat.addListener((){
@@ -159,124 +186,30 @@ class _MyDeleteCheck extends State<DeleteCheck> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     double height100 = MediaQuery.of(context).size.height;
     double width100 = MediaQuery.of(context).size.width;
-    _timer = new Timer(const Duration(milliseconds: 50), () {
-      widget.showReturn = true;
-    });
-    return new Container(
-      padding: EdgeInsets.fromLTRB(0.05*width100, 0.0, 0.0, 0.0),
-      height: 0.15*height100, 
+
+    return new SlideTransition(
+      position: _offsetFloat,
       child: Container(
-        color: Colors.cyan,
-        width: 0.5*width100,
-        child: Column(
-          children: <Widget>[
-            Padding(padding: EdgeInsets.all(5.0)),
-            Text(
-              'are you sure?', 
-              textAlign: TextAlign.center,
-            ),
-            Padding(padding: EdgeInsets.all(5.0)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                RaisedButton(
-                  color: Colors.red,
-                  onPressed: (){},
-                  child: Text("Delete")
-                ),
-                CancelDelete(model: widget.model)
-              ]
-            )
-          ],
+        padding: EdgeInsets.fromLTRB(0.05*width100, 0.0, 0.0, 0.0),
+        height: 0.15*height100, 
+        child: Container(
+          color: Colors.cyan,
+          width: 0.5*width100,
+          child: Column(
+            children: <Widget>[
+              Padding(padding: EdgeInsets.all(5.0)),
+              Text(
+                'are you sure?', 
+                textAlign: TextAlign.center,
+              ),
+              Padding(padding: EdgeInsets.all(5.0)),
+              CancelDelete(model: widget.model)
+            ],
+          )
         )
       )
     );
-    // return widget.showReturn==true ? new Container( //why does this not work?????
-    //   // alignment: Alignment.center,
-    //   child: SlideTransition(
-    //     position: _offsetFloat,
-    //     child: Container(
-    //       color: Colors.cyan,
-    //       width: 0.3*width100,
-    //       child: Text("hello there sailor")
-    //     )
-    //   )
-    // ) : new Container();
-    // return widget.showReturn==true?new SlideTransition(
-    //   position: _offsetFloat,
-    //   child: Container(
-    //     color: Colors.cyan,
-    //     width: 0.525*width100-3.0,
-    //     child: Text("hello there sailor")
-    //   )
-    // ):new Container();
 
-    // return new Container(
-    //   // color: Colors.purple,
-    //   height: 0.15*height100,
-    //   padding: EdgeInsets.fromLTRB(0.05*width100, 0.0, 0.0, 0.0),
-    //   child: SlideTransition(
-    //     position: _offsetFloat,
-    //     child: Container(
-    //       color: Colors.cyan,
-    //       width: 0.525*width100-3.0,
-    //       child: Text("hello there sailor")
-    //     )
-    //   )
-    // );
-
-    // return new Container(
-    //   height: 0.15*height100,
-    //   width: 0.50*width100,
-    //   // padding: EdgeInsets.fromLTRB((0.05*width100+1.0), 0.0, 0.0, 0.0),//overflows on exact because of card margin
-    //   alignment: FractionalOffset(_offsetFloat.value, 0.0),
-    //   // decoration: BoxDecoration(color: Colors.cyan),
-    //   decoration: BoxDecoration(color: Color.fromRGBO(0, 0, 0, 0.0)),
-    //   // child: Text("hello there sailor")
-    //   child: Container(
-    //     height: 0.15*height100,
-    //     // width: 0.50*width100,
-    //     padding: EdgeInsets.fromLTRB(30.0, 20.0, 30.0, 20.0),
-    //     // decoration: BoxDecoration(color: Color.fromRGBO(0, 0, 0, 0.0)),
-    //     decoration: BoxDecoration(color: Colors.cyan),
-    //     child: Column(
-    //       // crossAxisAlignment: CrossAxisAlignment.stretch,
-    //       children: <Widget>[
-    //         Text('are you sure?'), 
-    //         Expanded(
-    //           child: Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //             children: <Widget>[
-    //               RaisedButton(
-    //                 padding: EdgeInsets.all(1.0),
-    //                 color: Colors.red,
-    //                 onPressed: (){
-                      
-    //                 },
-    //                 child: Text(
-    //                   "Delete",
-    //                   style: TextStyle(fontSize: 5.0)
-    //                 )
-    //               ),
-    //               Padding(padding: EdgeInsets.all(5.0)),
-    //               RaisedButton(
-    //                 padding: EdgeInsets.all(1.0),
-    //                 color: Colors.cyan,
-    //                 onPressed: (){
-    //                   // reverseAnim();
-    //                 },
-    //                 child: Text(
-    //                   'Cancel',
-    //                   style: TextStyle(fontSize: 5.0)
-    //                 )
-    //               )
-    //             ]
-    //           )
-    //         )
-    //       ],
-    //     )      
-    //   )
-    // );
   }
 }
 
@@ -403,6 +336,13 @@ var step2ViewPhonePad = (widget) => ScopedModelDescendant<MainModel>(
                       var requests = new Requests.POSTRequests();
                       waitForUserNumber() async{
                         var userNumber = await phone.readUserPhoneNumber();
+                        print('value of reqs sent to addUserTargetNumber');
+                        print('listID');
+                        print(widget.model.selectedListID);
+                        print('userNumber');
+                        print(userNumber);
+                        print('callNumber');
+                        print(widget.model.callNumber);
                         var response = await requests.addUserTargetNumber(userNumber, widget.model.selectedListID, widget.model.callNumber);
                         var message = response.data['message'];
                         print('value of message');
@@ -410,9 +350,11 @@ var step2ViewPhonePad = (widget) => ScopedModelDescendant<MainModel>(
                         if(message=='successfully added target number'){
                           print('inside if callback in add number');
                           widget.model.setUserMongoose(response);
+                          widget.model.setAnimPhoneAdded(true);
                         }
                       }
                       waitForUserNumber();
+                      // widget.model.removeCallNumber();
                     },
                     color: Colors.red,
                     child: Text(
@@ -435,6 +377,173 @@ var step2ViewPhonePad = (widget) => ScopedModelDescendant<MainModel>(
   }
 );
 
+class PhoneAddedAnim extends StatefulWidget{
+  
+  final MainModel model;
+  // final offsetBool;
+  // final double widthSlide;
+  // bool showReturn = false;
+
+  PhoneAddedAnim({
+    Key key, 
+    // this.offsetBool, 
+    // this.widthSlide, 
+    // this.showReturn,
+    @required this.model,
+  }): super(key: key);
+
+  @override 
+  State<StatefulWidget> createState() {
+    return new _MyPhoneAddedAnim();
+  }
+}
+
+class _MyPhoneAddedAnim extends State<PhoneAddedAnim> with TickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<Offset> _offsetFloat;
+
+  AnimationController _controller1;
+  AnimationController _controller2;                                    
+  Animation<Color> animation1;
+  Animation<Color> animation2;   
+
+  Timer _timer; 
+  
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+    _controller1 = new AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
+    _controller2 = new AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
+
+    _offsetFloat = Tween<Offset>(
+      begin: Offset(0.0, 0.0), 
+      end: Offset(0.0, -2.0)
+    ).animate(_controller)
+    ..addListener((){
+      setState((){});
+    });
+
+    animation1 = new ColorTween(
+      begin: const Color.fromRGBO(0, 100, 250, 1.0),
+      end: const Color.fromRGBO(250, 100, 0, 0.0),
+    ).animate(_controller1)
+    ..addListener(() {
+      setState((){});
+    });
+
+
+    animation2 = new ColorTween(
+      begin: const Color.fromRGBO(250, 100, 0, 1.0),
+      end: const Color.fromRGBO(0, 100, 250, 0.0),
+    ).animate(_controller2)
+    ..addListener(() {
+      setState((){});
+    });
+
+    _controller.forward();
+    _controller1.forward();
+    _controller2.forward();
+    
+
+
+    _timer = new Timer(const Duration(seconds: 1), () {
+      widget.model.setAnimPhoneAdded(false);
+    });
+
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _controller1.forward();
+    _controller2.forward();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    double height100 = MediaQuery.of(context).size.height;
+    double width100 = MediaQuery.of(context).size.width;
+    return new SlideTransition(
+      position: _offsetFloat,
+      child: new Container(
+        width: 0.48*width100,
+        height: 0.20*height100,
+        // decoration: BoxDecoration(color: animation1.value),
+        // padding: EdgeInsets.fromLTRB(0.01*width100, 0.02*height100, 0.01*width100, 0.02*height100),
+        // color: animation1.value,
+        decoration: BoxDecoration(color: animation1.value),
+        padding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+        
+        // EdgeInsets.all(6.0),
+        // padding: EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "phone number added!",
+              // decoration: new InputDecoration(contentPadding: const EdgeInsets.all(20.0),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14.0,
+                color: animation2.value,
+              )
+            ),
+            // Padding(padding: EdgeInsets.all(2.0))
+          ]
+        )
+        
+        
+        
+       
+        
+      
+
+        // child: Card(
+        //   color: animation1.value,
+        //   child: Container(
+        //     padding: EdgeInsets.fromLTRB(0.01*width100, 0.02*height100, 0.01*width100, 0.02*height100),
+        //     decoration: BoxDecoration(color: Color.fromRGBO(0, 0, 0, 0.0)),
+        //     child: Text(
+        //       "phone number added!",
+        //       textAlign: TextAlign.center,
+        //       style: TextStyle(
+        //         fontSize: 15.0,
+        //         color: animation2.value,
+        //       )
+        //     )
+        //   )
+        // ) 
+        // child: Card(
+        //   child: Container(
+        //     color: animation1.value,
+        //     padding: EdgeInsets.fromLTRB(0.0, 0.02*height100, 0.0, 0.02*height100),
+        //     child: Text(
+        //       "phone number added!",
+        //       textAlign: TextAlign.center,
+        //       style: TextStyle(
+        //         fontSize: 15.0,
+        //         color: animation2.value
+        //       )
+        //     )
+        //   )
+        // )
+      )
+    );
+  }
+}
+
 
 var step2ViewAddButtons = (widget) => ScopedModelDescendant<MainModel>(
   builder: (context, child, model){
@@ -456,7 +565,7 @@ var step2ViewAddButtons = (widget) => ScopedModelDescendant<MainModel>(
                 padding: EdgeInsets.fromLTRB(0.0, 0.02*height100, 0.0, 0.02*height100),
                 child:Text("Add # to List",
                   textAlign: TextAlign.center,
-                  style:TextStyle(
+                  style: TextStyle(
                     fontSize: 15.0,
                     color: widget.model.step2ChooseType=='add#'?Colors.white:Colors.black,
                   )
@@ -477,15 +586,24 @@ var step2ViewAddButtons = (widget) => ScopedModelDescendant<MainModel>(
               color: widget.model.step2ChooseType=='view#'?Colors.black:Colors.white,
               child: new Padding(
                 padding: EdgeInsets.fromLTRB(0.0, 0.02*height100, 0.0, 0.02*height100),
-                child:Text("View #s in List",
-                  textAlign: TextAlign.center,
-                  style:TextStyle(
-                    fontSize: 15.0,
-                    color: widget.model.step2ChooseType=='view#'?Colors.white:Colors.black,
-                  )
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      width: 0.48*width100,
+                      height: 0.08*height100,
+                      child: Text("View #s",
+                        textAlign: TextAlign.center,
+                        style:TextStyle(
+                          fontSize: 15.0,
+                          color: widget.model.step2ChooseType=='view#'?Colors.white:Colors.black,
+                        )
+                      ),
+                    ),
+                    widget.model.animPhoneAdded==true?PhoneAddedAnim(model: model):Container()
+                  ],
                 )
-              )
-            )
+              )        
+            ) 
           )
         )
       ],

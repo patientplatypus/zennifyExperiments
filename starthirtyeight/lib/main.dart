@@ -44,7 +44,7 @@ void main() {
       children: <Widget>[
         new BackgroundImage(),
         // new AboutScreen(),
-        new BottomBar(model: BottombarModel())
+        new BottomBar(model: MainModel())
       ], 
     );
   }));
@@ -56,7 +56,7 @@ void main() {
       children: <Widget>[
         // new BackgroundImage(),
         new SettingsScreen(model: mainModel),
-        new BottomBar(model: BottombarModel())
+        new BottomBar(model: MainModel())
       ], 
     );
   }));
@@ -68,7 +68,7 @@ void main() {
       children: <Widget>[
         // new BackgroundImage(),//set inside SplashScreen - not working here for some reason
         new SplashScreen(model: mainModel),
-        new BottomBar(model: BottombarModel())
+        new BottomBar(model: MainModel())
       ], 
     );
   }));
@@ -80,7 +80,7 @@ void main() {
       children: <Widget>[
         new BackgroundImage(),
         new PhoneScreen(model: mainModel),
-        new BottomBar(model: BottombarModel())
+        new BottomBar(model: MainModel())
       ], 
     );
   }));
@@ -92,7 +92,7 @@ void main() {
         children: <Widget>[
           new BackgroundImage(),
           new SplashScreen(model: mainModel),
-          new BottomBar(model: BottombarModel())
+          new BottomBar(model: MainModel())
         ], 
       ),
       title: 'Flutter Demo',

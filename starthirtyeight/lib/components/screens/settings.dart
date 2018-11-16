@@ -48,7 +48,12 @@ class MySettingsScreen extends StatefulWidget {
   }
 }
 
-class _MySettingsScreen extends State<MySettingsScreen> with TickerProviderStateMixin {              
+class _MySettingsScreen extends State<MySettingsScreen> with TickerProviderStateMixin {     
+
+  @override
+  void initState() {
+    super.initState();
+  }         
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +92,7 @@ class _MySettingsScreen extends State<MySettingsScreen> with TickerProviderState
 
 var modalView = (widget) => ScopedModelDescendant<MainModel>(
   builder: (context, child, model){
-    print('inside modalView');
+    // print('inside modalView');
     if (widget.model.showInfoModel==true){
       print('inside showInfoModel is true in modalView');
       print('value of widget.model.infoName:');

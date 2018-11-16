@@ -9,7 +9,7 @@ import 'package:starthirtyeight/globals/globals.dart' as globals;
 import 'package:starthirtyeight/static_state/static_state.dart' as staticState;
 
 class BottomBar extends StatelessWidget{
-  final BottombarModel model;
+  final MainModel model;
 
   const BottomBar({
     Key key, 
@@ -18,7 +18,7 @@ class BottomBar extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
-    return ScopedModel<BottombarModel>(
+    return ScopedModel<MainModel>(
       model: model,
       child: new MyBottomBar(model: model)
     );
@@ -27,7 +27,7 @@ class BottomBar extends StatelessWidget{
 
 class MyBottomBar extends StatefulWidget {
 
-  final BottombarModel model;
+  final MainModel model;
 
   const MyBottomBar({
     Key key, 
@@ -155,13 +155,27 @@ class _MyBottomBar extends State<MyBottomBar> with SingleTickerProviderStateMixi
                 child: new Container(
                   decoration: new BoxDecoration(color: Colors.black87),
                   child: new IconButton(
-                      icon: homeIcon(), 
-                      onPressed: () { 
-                        print("Pressed 1");
-                        globals.router.navigateTo(context, "home", transition: TransitionType.fadeIn);
-                        staticState.recordRoute('home');
-                        // Navigator.pushReplacementNamed(context, 'home');
-                      }
+                    icon: homeIcon(), 
+                    onPressed: () { 
+                      print("Pressed 1");
+                      globals.router.navigateTo(context, "home", transition: TransitionType.fadeIn);
+                      staticState.recordRoute('home');
+                      // Navigator.pushReplacementNamed(context, 'home');
+                    }
+                  )
+                )
+              ),
+              new Expanded(
+                child: new Container(
+                  decoration: new BoxDecoration(color: Colors.black87),
+                  child:  new IconButton(
+                    icon: phoneIcon(), 
+                    onPressed: () { 
+                      print("Pressed 2");
+                      globals.router.navigateTo(context, "phone", transition: TransitionType.fadeIn);
+                      staticState.recordRoute('phone');
+                      // Navigator.pushReplacementNamed(context, 'phone');
+                    }
                   )
                 )
               ),
@@ -169,27 +183,13 @@ class _MyBottomBar extends State<MyBottomBar> with SingleTickerProviderStateMixi
                 child: new Container(
                   decoration: new BoxDecoration(color: Colors.black87),
                   child: new IconButton(
-                      icon: phoneIcon(), 
-                      onPressed: () { 
-                        print("Pressed 2");
-                        globals.router.navigateTo(context, "phone", transition: TransitionType.fadeIn);
-                        staticState.recordRoute('phone');
-                        // Navigator.pushReplacementNamed(context, 'phone');
-                      }
-                  )
-                )
-              ),
-              new Expanded(
-                child: new Container(
-                  decoration: new BoxDecoration(color: Colors.black87),
-                  child: new IconButton(
-                      icon: settingsIcon(), 
-                      onPressed: () { 
-                        print("Pressed 3");
-                        globals.router.navigateTo(context, "settings", transition: TransitionType.fadeIn);
-                        staticState.recordRoute('settings');
-                        // Navigator.pushReplacementNamed(context, 'settings');
-                      }
+                    icon: settingsIcon(), 
+                    onPressed: () { 
+                      print("Pressed 3");
+                      globals.router.navigateTo(context, "settings", transition: TransitionType.fadeIn);
+                      staticState.recordRoute('settings');
+                      // Navigator.pushReplacementNamed(context, 'settings');
+                    }
                   )
                 )
               ),

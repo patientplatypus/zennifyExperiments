@@ -16,6 +16,12 @@ class MyTotalnum extends StatefulWidget{
 
 class _MyTotalnum extends State<MyTotalnum>{
   @override
+  void initState() {
+      super.initState();
+      print('inside initState for TotalNum of input phone number/pad');
+      widget.model.removeCallNumber();
+    }
+  @override
   Widget build(BuildContext context){
     return new Material(
       child: Container(
@@ -57,7 +63,7 @@ var backSpace = (widget) => ScopedModelDescendant<MainModel>(
 );
 
 var displayNumber = (widget) => ScopedModelDescendant<MainModel>(
-  builder: (context, child, model){
+  builder: (context, child, model){//reset on each load of displayNumber
     return Container(
       decoration: new BoxDecoration(color: new Color.fromRGBO(0, 0, 0, 0.0)),
       // decoration: BoxDecoration(color: Colors.black87),

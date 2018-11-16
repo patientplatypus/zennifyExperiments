@@ -31,7 +31,15 @@ router.post('/addIonCannonNumber', function(req,res,next){
 
 router.post('/addUserTargetNumber', function(req,res,next){
   console.log('inside /addUserTargetNumber');
+  console.log('value of userName: ', req.body.userNumber);
+  console.log('value of listID: ', req.body.listID);
+  console.log('value of targetNumber: ', req.body.targetNumber);
   logos.addUserTargetNumber(req.body.userNumber, req.body.listID, req.body.targetNumber, res);
+});
+
+router.post('/deleteUserTargetNumber', function(req,res,next){
+  console.log('inside /deleteUserTargetNumber');
+  logos.deleteUserTargetNumber(req.body.userNumber, req.body.listID, req.body.targetNumber, res);
 });
 
 router.post('/addUserNumber', function(req,res,next){

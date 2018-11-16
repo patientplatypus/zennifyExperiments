@@ -191,6 +191,13 @@ class SettingsViews extends Model{
     notifyListeners();
   }
 
+  bool _animPhoneAdded = false;
+  bool get animPhoneAdded => _animPhoneAdded;
+  setAnimPhoneAdded(newVal){
+    _animPhoneAdded = newVal;
+    notifyListeners();
+  }
+
 }
 
 class BottombarModel extends Model{
@@ -220,6 +227,10 @@ class PhoneModel extends Model{
     print('value of callnumber after substring: ${_callNumber}');
     notifyListeners();
   }
+  removeCallNumber(){
+    _callNumber = "";
+    notifyListeners();
+  }
 }
 
-class MainModel extends Model with PhoneModel, SplashModel, ReadWriteModel, ErrorModel, SettingsRouter, SettingsViews, InfoModel, SettingsData{}
+class MainModel extends Model with PhoneModel, SplashModel, ReadWriteModel, ErrorModel, SettingsRouter, SettingsViews, InfoModel, SettingsData, BottombarModel{}

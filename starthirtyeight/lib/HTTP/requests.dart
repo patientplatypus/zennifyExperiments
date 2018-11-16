@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'dart:async';
 import 'dart:io';
 
-var zeitURL="https://backend-utkhrdkgkk.now.sh";
+var zeitURL="https://backend-knagpfenso.now.sh";
 
 class GETRequests{
 
@@ -111,6 +111,24 @@ class POSTRequests{
       return response;
     } on DioError catch(e) {
         print('there was some error in addUserTargetNumber');
+        print(e.response.data);
+        print(e.response.headers);
+        print(e.response.request);  
+        return e.response.data;
+    }
+  }
+
+  deleteUserTargetNumber(userNumber, listID, targetNumber) async{
+    print('inside deleteUserTargetNumber()');
+    Dio dio = new Dio();
+    try {
+      Response response;
+      response=await dio.post(zeitURL + "/deleteUserTargetNumber", data: {"userNumber": userNumber, "listID": listID, "targetNumber": targetNumber});
+      print('here is the response from addUserTargetNumber');
+      print(response);
+      return response;
+    } on DioError catch(e) {
+        print('there was some error in deleteUserTargetNumber');
         print(e.response.data);
         print(e.response.headers);
         print(e.response.request);  
