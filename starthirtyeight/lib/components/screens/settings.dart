@@ -13,6 +13,8 @@ import 'dart:convert';
 
 import 'package:starthirtyeight/components/subscreens/settings/settingsView1.dart' as View1;
 import 'package:starthirtyeight/components/subscreens/settings/settingsView2.dart' as View2;
+import 'package:starthirtyeight/components/subscreens/settings/settingsView3.dart' as View3;
+import 'package:starthirtyeight/components/subscreens/settings/settingsView4.dart' as View4;
 
 class SettingsScreen extends StatelessWidget{
   final MainModel model;
@@ -75,10 +77,10 @@ class _MySettingsScreen extends State<MySettingsScreen> with TickerProviderState
                 Padding(
                   padding: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
                 ),
-                cardButton(widget, "Step 1.", "Create or Select Phone List", "step1"),
-                cardButton(widget, "Step 2.", "Add Numbers to List", "step2"),
-                cardButton(widget, "Step 3.", "Choose Message and Times", "step3"),
-                cardButton(widget, "Step 4.", "Fire the Lazerbeam", "Step 4."),
+                cardButton(widget, "Step 1.", "Create or Select List", "step1"),
+                cardButton(widget, "Step 2.", "Add Numbers", "step2"),
+                cardButton(widget, "Step 3.", "Choose Times", "step3"),
+                cardButton(widget, "Step 4.", "Fire the Lazerbeam", "step4"),
                 routerView(widget)
               ],
             ),
@@ -119,9 +121,9 @@ var routerView = (widget) => ScopedModelDescendant<MainModel>(
     }else if(widget.model.settingsCurrentRoute=='step2'){
       return View2.step2View(widget);
     }else if(widget.model.settingsCurrentRoute=='step3'){
-      return new Container();
+      return View3.step3View(widget);
     }else if(widget.model.settingsCurrentRoute=='step4'){
-      return new Container();
+      return View4.step4View(widget);
     }else{
       return new Container();
     }
@@ -132,6 +134,17 @@ var cardButton = (widget, cardTitle, cardMessage, routerName) => ScopedModelDesc
   builder: (context, child, model){
     double height100 = MediaQuery.of(context).size.height;
     double width100 = MediaQuery.of(context).size.width;
+    bool doneCondition = false;
+
+    if(routerName=='step1'){
+      doneCondition = widget.model.selectedListID!="";
+    }else if(routerName=='step2'){
+      doneCondition = widget.model.step2Done;
+    }else if(routerName=='step3'){
+      doneCondition = widget.model.step3Done;
+    }else if(routerName=='step4'){
+      doneCondition = false;
+    }
 
     backButton(){
       if(widget.model.settingsCurrentRoute!='menu'){
@@ -151,6 +164,38 @@ var cardButton = (widget, cardTitle, cardMessage, routerName) => ScopedModelDesc
         return new Container();
       }
     };
+
+    doneFlare(){
+      if (doneCondition && widget.model.settingsCurrentRoute=='menu'){
+        return new Container(
+          padding: EdgeInsets.fromLTRB(0.75*width100, 5.0, 5.0, 5.0),
+          child: Container(
+            color: Colors.black,
+            child: Text(
+              "DONE",
+              style: TextStyle(
+                color: Colors.red
+              ),
+            ),
+          )
+        );
+      }else if(!doneCondition && widget.model.settingsCurrentRoute=='menu'){
+        return new Container(
+          padding: EdgeInsets.fromLTRB(0.75*width100, 5.0, 5.0, 5.0),
+          child: Container(
+            color: Colors.cyan,
+            child: Text(
+              "TODO",
+              style: TextStyle(
+                color: Colors.red
+              ),
+            ),
+          )
+        );
+      }else{
+        return new Container();
+      }
+    }
 
     if(widget.model.settingsCurrentRoute=='menu' || widget.model.settingsCurrentRoute==routerName){
       return new Stack(
@@ -203,7 +248,8 @@ var cardButton = (widget, cardTitle, cardMessage, routerName) => ScopedModelDesc
               )
             )
           ), 
-          backButton()
+          backButton(), 
+          doneFlare()
         ],
       );
     }else{

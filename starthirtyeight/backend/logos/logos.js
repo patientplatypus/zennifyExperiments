@@ -47,6 +47,21 @@ const deleteUserTargetNumber = (userNumber, listID, targetNumber, res) =>{
     );
 }
 
+const updateCallTimes = (startDate, endDate, callTimes, listID, userID, res)=>{
+    console.log('inside updateCallTimes()');
+    NumberSchema.findOneAndUpdate(
+        {'_id': userID, "targetPhoneNumbers._id": listID},
+        {"targetPhoneNumbers.$.startDate": startDate, "targetPhoneNumbers.$.endDate":endDate, "targetPhoneNumbers.$.timesPerDay": callTimes},
+        (err, updateReturn)=>{
+            if(err){console.log('there was an error in findOneAndUpdate: ', err)}
+            console.log('updateReturn from findOneAndUpdate: ', updateReturn);
+            NumberSchema.findOne({'_id': userID,  "targetPhoneNumbers._id": listID}, (err, userNumberFound) => {
+                if (err){res.json({message: "there was an error"})}
+                res.json({message: 'successfully updated number', schema: userNumberFound});
+            })
+        })
+}
+
 const addUserTargetNumber = (userNumber, listID, targetNumber, res) =>{
     console.log('value of listID: ', listID);
     console.log('value of userNumber: ', userNumber);
@@ -244,6 +259,7 @@ module.exports = {
     addUserNumber,
     addUserList,
     checkUserData,
+    updateCallTimes,
     addUserTargetNumber,
     deleteUserTargetNumber,
     deleteUserNumber,

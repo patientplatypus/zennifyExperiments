@@ -24,6 +24,11 @@ router.post('/deleteIonCannonNumber', function(req,res,next){
   logos.deleteIonCannonNumber(req.body.ionCannonNumber, req.body.userNumber, res);
 })
 
+router.post('/updateCallTimes', function(req, res, next){
+  console.log('inside /updateCallTimes');
+  logos.updateCallTimes(req.body.startDate, req.body.endDate, req.body.callTimes, req.body.listID, req.body.userID, res);
+})
+
 router.post('/addIonCannonNumber', function(req,res,next){
   console.log('inside /addIonCannonNumber');
   logos.addNewIonCannonNumber(req.body.ionCannonNumber, req.body.userNumber, res);

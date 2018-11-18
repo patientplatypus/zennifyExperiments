@@ -109,7 +109,7 @@ class SettingsData extends Model{
     notifyListeners();
   }
 
-  var _selectedListID;
+  var _selectedListID = "";
   get selectedListID => _selectedListID;
   setSelectedListID(newVal){
     print('inside setSelectedListID');
@@ -118,6 +118,42 @@ class SettingsData extends Model{
     print(_selectedListID);
     notifyListeners();
   }
+
+  var _step2Done = false;
+  get step2Done => _step2Done;
+  setStep2Done(newVal){
+    _step2Done = newVal;
+    notifyListeners();
+  }
+
+  var _step3Done = false;
+  get step3Done => _step3Done;
+  setStep3Done(newVal){
+    _step3Done = newVal;
+    notifyListeners();
+  }
+
+  var _timesCallDay = 1;
+  get timesCallDay => _timesCallDay;
+  setTimesCallDay(newVal){
+    _timesCallDay = newVal;
+    notifyListeners();
+  }
+
+  var _newStartDate = DateTime.now();
+  get newStartDate => _newStartDate;
+  setNewStartDate(newVal){
+    _newStartDate = newVal;
+    notifyListeners();
+  }
+
+  var _newEndDate = DateTime.now();
+  get newEndDate => _newEndDate;
+  setNewEndDate(newVal){
+    _newEndDate = newVal;
+    notifyListeners();
+  }
+
 }
 
 class SettingsViews extends Model{

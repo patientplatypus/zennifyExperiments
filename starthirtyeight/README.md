@@ -13,3 +13,9 @@ A new Flutter project.
 - fix margin card issue on step2 delete button animation.
 - turn off slide transition for delete when menu button back, switch submenu or bottom menu.
 - change name of "settings screen" to "rocket screen" and replace middle phone icon on bottom bar with cog and make a "cog screen"
+- fill out card at top of step2 with more information about list.
+- consider styling date picker in step 3 when done with everything else.
+- add a way to delete a list and not just the numbers in the list (may need to change list options in step1).
+- add loading icons (spinners) for anything that takes a hot sec to load (ie list in step1)
+- Edge case handling on step3 when user asks for settings that dont make sense.
+- Fix jump from back button appearing on totalNum phone number display.

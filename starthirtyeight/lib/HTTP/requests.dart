@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'dart:async';
 import 'dart:io';
 
-var zeitURL="https://backend-knagpfenso.now.sh";
+var zeitURL="https://backend-chnxsokpan.now.sh";
 
 class GETRequests{
 
@@ -135,5 +135,39 @@ class POSTRequests{
         return e.response.data;
     }
   }
+
+  updateCallTimes(startDate, endDate, callTimes, listID, userID) async{
+    print('inside updateCallTimes()');
+    // print('value of startDate');
+    // print(startDate.millisecondsSinceEpoch);
+    // // print(DateTime.parse(startDate).millisecondsSinceEpoch);
+    // print('value of endDate');
+    // print(endDate);
+    // // .millisecondsSinceEpoch()
+
+    Dio dio = new Dio();
+    try {
+      Response response;
+      response=await dio.post(zeitURL + "/updateCallTimes", data: {
+        'startDate': startDate.millisecondsSinceEpoch,
+        'endDate': endDate.millisecondsSinceEpoch,
+        'callTimes': callTimes, 
+        'listID': listID, 
+        'userID': userID        
+      });
+      print('here is the response from updateCallTimes');
+      print(response.toString());
+      return response;
+    } on DioError catch(e) {
+        print('there was some error in updateCallTimes');
+        print(e.toString());
+        // print(e.response.data);
+        // print(e.response.headers);
+        // print(e.response.request);  
+        // return e.response.data;
+    }
+  }
+
+  
 
 }

@@ -246,7 +246,6 @@ var step2ViewNumbersList = (widget) => ScopedModelDescendant<MainModel>(
                             ),
                           )
                         ),
-                        // Padding(padding: EdgeInsets.all(20.0)),
                         Stack(
                           children: <Widget>[
                             Container(
@@ -278,12 +277,6 @@ var step2ViewNumbersList = (widget) => ScopedModelDescendant<MainModel>(
                             widget.model.deleteNotify!=""&&    widget.model.deleteNumberString==widget.model.userMongoose.data['schema']['targetPhoneNumbers'][i]['listNumbers'][x].toString()?
                             DeleteCheck(model: model, offsetBool: widget.model.deleteNotify, widthSlide: 0.50*width100):
                             Container(width: 0.55*width100, height: 0.15*height100,padding: EdgeInsets.fromLTRB(0.05*width100, 0.0, 0.0, 0.0))
-                            // Container(
-                            //   padding: EdgeInsets.fromLTRB(0.05*width100+0.5, 0.0, 0.0, 0.0),
-                            //   child: widget.model.deleteNotify!=""&&    widget.model.deleteNumberString==widget.model.userMongoose.data['schema']['targetPhoneNumbers'][i]['listNumbers'][x].toString()?
-                            //     DeleteCheck(offsetBool: widget.model.deleteNotify, widthSlide: 0.5*width100):
-                            //     Container(width: 0.50*width100, height: 0.15*height100,)
-                            // ),
                           ],
                         )
                       ],
@@ -326,48 +319,59 @@ var step2ViewPhonePad = (widget) => ScopedModelDescendant<MainModel>(
           new MyPhonePad(model: widget.model),
           Container(
             width: width100,
-            child: Row(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Padding(padding: EdgeInsets.all(30.0)),
-                Expanded(
-                  child: RaisedButton(
-                    onPressed: (){
-                      var phone = new Phone.LocalPhoneStorage();
-                      var requests = new Requests.POSTRequests();
-                      waitForUserNumber() async{
-                        var userNumber = await phone.readUserPhoneNumber();
-                        print('value of reqs sent to addUserTargetNumber');
-                        print('listID');
-                        print(widget.model.selectedListID);
-                        print('userNumber');
-                        print(userNumber);
-                        print('callNumber');
-                        print(widget.model.callNumber);
-                        var response = await requests.addUserTargetNumber(userNumber, widget.model.selectedListID, widget.model.callNumber);
-                        var message = response.data['message'];
-                        print('value of message');
-                        print(message);
-                        if(message=='successfully added target number'){
-                          print('inside if callback in add number');
-                          widget.model.setUserMongoose(response);
-                          widget.model.setAnimPhoneAdded(true);
-                        }
+                RaisedButton(
+                  onPressed: (){
+                    var phone = new Phone.LocalPhoneStorage();
+                    var requests = new Requests.POSTRequests();
+                    waitForUserNumber() async{
+                      var userNumber = await phone.readUserPhoneNumber();
+                      print('value of reqs sent to addUserTargetNumber');
+                      print('listID');
+                      print(widget.model.selectedListID);
+                      print('userNumber');
+                      print(userNumber);
+                      print('callNumber');
+                      print(widget.model.callNumber);
+                      var response = await requests.addUserTargetNumber(userNumber, widget.model.selectedListID, widget.model.callNumber);
+                      var message = response.data['message'];
+                      print('value of message');
+                      print(message);
+                      if(message=='successfully added target number'){
+                        print('inside if callback in add number');
+                        widget.model.setUserMongoose(response);
+                        widget.model.setAnimPhoneAdded(true);
                       }
-                      waitForUserNumber();
-                      // widget.model.removeCallNumber();
-                    },
-                    color: Colors.red,
-                    child: Text(
-                      "Add Number!",
-                      style: TextStyle(
-                        fontSize: 20.0
-                      ),
+                    }
+                    waitForUserNumber();
+                    // widget.model.removeCallNumber();
+                  },
+                  color: Colors.red,
+                  child: Text(
+                    "Add Number!",
+                    style: TextStyle(
+                      fontSize: 20.0
                     ),
                   ),
                 ),
-                Padding(padding: EdgeInsets.all(30.0))
+                RaisedButton(
+                  onPressed: (){
+                    widget.model.setStep2Done(true);
+                    widget.model.recordSettingsRoute('step3');
+                  },
+                  color: Colors.blue,
+                  child: Text(
+                    "Go to Step 3!",
+                    style: TextStyle(
+                      fontSize: 20.0
+                    ),
+                  ),
+                ),
               ],
-            ),
+            )
           )
         ],
       );
@@ -480,65 +484,21 @@ class _MyPhoneAddedAnim extends State<PhoneAddedAnim> with TickerProviderStateMi
       child: new Container(
         width: 0.48*width100,
         height: 0.20*height100,
-        // decoration: BoxDecoration(color: animation1.value),
-        // padding: EdgeInsets.fromLTRB(0.01*width100, 0.02*height100, 0.01*width100, 0.02*height100),
-        // color: animation1.value,
         decoration: BoxDecoration(color: animation1.value),
         padding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-        
-        // EdgeInsets.all(6.0),
-        // padding: EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text(
               "phone number added!",
-              // decoration: new InputDecoration(contentPadding: const EdgeInsets.all(20.0),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14.0,
                 color: animation2.value,
               )
             ),
-            // Padding(padding: EdgeInsets.all(2.0))
           ]
         )
-        
-        
-        
-       
-        
-      
-
-        // child: Card(
-        //   color: animation1.value,
-        //   child: Container(
-        //     padding: EdgeInsets.fromLTRB(0.01*width100, 0.02*height100, 0.01*width100, 0.02*height100),
-        //     decoration: BoxDecoration(color: Color.fromRGBO(0, 0, 0, 0.0)),
-        //     child: Text(
-        //       "phone number added!",
-        //       textAlign: TextAlign.center,
-        //       style: TextStyle(
-        //         fontSize: 15.0,
-        //         color: animation2.value,
-        //       )
-        //     )
-        //   )
-        // ) 
-        // child: Card(
-        //   child: Container(
-        //     color: animation1.value,
-        //     padding: EdgeInsets.fromLTRB(0.0, 0.02*height100, 0.0, 0.02*height100),
-        //     child: Text(
-        //       "phone number added!",
-        //       textAlign: TextAlign.center,
-        //       style: TextStyle(
-        //         fontSize: 15.0,
-        //         color: animation2.value
-        //       )
-        //     )
-        //   )
-        // )
       )
     );
   }
